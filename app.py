@@ -1,8 +1,10 @@
 from scripts import generate_evaluation, generate_script
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import os
 
 app = Flask(__name__)
+CORS(app, origins="*")
 
 @app.route('/generate-script', methods=['POST'])
 def script_endpoint():
