@@ -11,7 +11,7 @@ def generate_script(topic, script, level):
     """
     client = OpenAI()   
     response = client.responses.create(
-        model="gpt-4o-mini",
+        model="gpt-4o",
         input=[
             {
                 "role": "system",
@@ -22,7 +22,7 @@ def generate_script(topic, script, level):
                 "content": f"Describe about \"{topic}\" with the help of following context: \n {script}. \nThe level of the student is {level}"
             }
         ],
-        temperature= 0.5    
+        temperature= 0.1    
     )
     return response.output_text.strip()
 
@@ -32,7 +32,7 @@ def generate_evaluation(question, student_ans):
     """
     client = OpenAI()   
     response = client.responses.create(
-        model="gpt-4o-mini",
+        model="gpt-4o",
         input=[
             {
                 "role": "system",
@@ -40,9 +40,9 @@ def generate_evaluation(question, student_ans):
             },
             {
                 "role": "user",
-                "content": f"Question: \n{question}, Students' answer: \n{student_ans} "
+                "content": f"""Question: \n{question}, Students' answer: \n{student_ans}"""
             }
         ],
-        temperature= 0.5    
+        temperature= 0    
     )
     return response.output_text.strip()

@@ -17,6 +17,7 @@ def script_endpoint():
         return jsonify({"error": "Missing topic or context"}), 400
 
     script = generate_script(topic, context, level)
+    script = script.replace('\n', '')
     return jsonify({"script": script})
 
 @app.route('/evaluate-answer', methods=['POST'])
@@ -29,6 +30,7 @@ def evaluation_endpoint():
         return jsonify({"error": "Missing question or student answer"}), 400
 
     evaluation = generate_evaluation(question, student_ans)
+    evaluation = evaluation.replace('\n', '')
     return jsonify({"evaluation": evaluation})
 
 if __name__ == '__main__':
