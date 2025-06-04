@@ -1,8 +1,10 @@
 from scripts import generate_evaluation, generate_script
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import os
 
 app = Flask(__name__)
+CORS(app, origins="*")
 
 @app.route('/generate-script', methods=['POST'])
 def script_endpoint():
@@ -15,6 +17,7 @@ def script_endpoint():
         return jsonify({"error": "Missing topic or context"}), 400
 
     script = generate_script(topic, context, level)
+    script = script.replace('\n', '')
     return jsonify({"script": script})
 
 @app.route('/evaluate-answer', methods=['POST'])
@@ -27,7 +30,9 @@ def evaluation_endpoint():
         return jsonify({"error": "Missing question or student answer"}), 400
 
     evaluation = generate_evaluation(question, student_ans)
+    evaluation = evaluation.replace('\n', '')
     return jsonify({"evaluation": evaluation})
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
