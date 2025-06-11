@@ -1,89 +1,35 @@
 ex_output = """
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Kinetic and Potential Energy Stores</title>
-</head>
-<body>
-
-    <h2>Kinetic and Potential Energy Stores</h2>
-
-    <h3>1. <strong>Kinetic Energy (KE)</strong></h3>
-    <ul>
-        <li><strong>Definition:</strong> Moving objects have energy called kinetic energy.</li>
-        <li><strong>Energy Transfer:</strong> When an object speeds up, energy goes into its kinetic energy store; when it slows down, energy is released.</li>
-        <li><strong>Dependence:</strong> The amount of kinetic energy depends on the object’s mass and speed—heavier and faster objects have more kinetic energy.</li>
-    </ul>
-
-    <p><strong>Formula:</strong></p>
-    <p><em>Ek = 1/2 × m × v²</em></p>
-    <ul>
-        <li>Ek = kinetic energy (Joules)</li>
-        <li>m = mass (kg)</li>
-        <li>v = speed (m/s)</li>
-    </ul>
-
-    <p><strong>Example:</strong> A car with a mass of 2500 kg moving at 20 m/s:</p>
-    <p><em>Ek = 1/2 × 2500 × (20)² = 500,000 J</em></p>
-
-    <h3>2. <strong>Gravitational Potential Energy (GPE)</strong></h3>
-    <ul>
-        <li><strong>Definition:</strong> Lifting an object stores energy in its gravitational potential energy store. The higher it is, the more GPE it has.</li>
-        <li><strong>Dependence:</strong> Gravitational potential energy depends on the mass of the object, its height above ground, and the gravitational field strength.</li>
-    </ul>
-
-    <p><strong>Formula:</strong></p>
-    <p><em>Ep = m × g × h</em></p>
-    <ul>
-        <li>Ep = gravitational potential energy (Joules)</li>
-        <li>m = mass (kg)</li>
-        <li>g = gravitational field strength (approx. 9.81 m/s² on Earth)</li>
-        <li>h = height (m)</li>
-    </ul>
-
-    <h3>3. <strong>Energy Transformation</strong></h3>
-    <p>When an object falls, gravitational potential energy is converted to kinetic energy.</p>
-    <p><em>In ideal conditions (no air resistance):</em></p>
-    <p><em>Energy lost from GPE = Energy gained in KE</em></p>
-
-    <h3>4. <strong>Real-life Considerations</strong></h3>
-    <p>Air resistance can convert some energy into thermal energy, so not all GPE transforms into KE.</p>
-
-    <h3>5. <strong>Elastic Potential Energy</strong></h3>
-    <ul>
-        <li><strong>Definition:</strong> Stretching or squashing an object stores energy in its elastic potential energy store.</li>
-        <li><strong>Valid Range:</strong> This only works if the object is stretched or compressed within its elastic limit.</li>
-    </ul>
-
-    <p><strong>Formula:</strong></p>
-    <p><em>Ee = 1/2 × k × e²</em></p>
-    <ul>
-        <li>Ee = elastic potential energy (Joules)</li>
-        <li>k = spring constant (N/m)</li>
-        <li>e = extension or compression (m)</li>
-    </ul>
-
-    <h3>Summary:</h3>
-    <ul>
-        <li><strong>Kinetic Energy</strong> increases with speed and mass.</li>
-        <li><strong>Gravitational Potential Energy</strong> increases with height, mass, and local gravity.</li>
-        <li>Energy can change from one form to another (e.g., GPE to KE when falling).</li>
-        <li><strong>Elastic Potential Energy</strong> arises during stretching or compressing of springs or elastic materials.</li>
-    </ul>
-
-    <p>Keep these key points in mind, and you'll have a solid understanding of energy stores!</p>
-
-</body>
-</html>
+<p><strong>Energy cannot be created or destroyed.</strong><br>
+It can only be <strong>transferred</strong> from one store to another or between objects or systems.</p>
+<ul>
+  <li>The total amount of energy in a <em>closed system</em> stays the same.</li>
+  <li>Energy may move or change form, but it is never lost or used up.</li>
+</ul>
+<p>Boiling water in a kettle:</p>
+<ul>
+  <li>Electrical energy from the plug turns into thermal energy in the water.</li>
+  <li>No energy disappears — it just changes from one store to another.</li>
+</ul>
 """
 
-Explanation_prompt = f"""You are an A Level Physics tutor. You are given content from an A Level Physics textbook and the expertise level of a student (rated 1–10).
-Your job is to: 
- 1. Teach the student the content clearly and concisely, using simple explanations matched to their level. 
- 2. Avoid long or overly detailed descriptions — focus on key points, formulas, and brief examples where helpful.
- 3. Return the output in HTML format.
+# Explanation_prompt = f"""You are an A Level Physics tutor. You are given content from an A Level Physics textbook and the expertise level of a student (rated 1–10).
+# Your job is to: 
+#  1. Teach the student the content clearly and concisely, using simple explanations matched to their level. 
+#  2. Avoid long or overly detailed descriptions — focus on key points, formulas, and brief examples where helpful.
+#  3. Return the output in HTML format.
+# 
+# Example Output:
+# {ex_output}
+# """
 
-Example Output:
+Explanation_prompt = f"""
+You are an A Level Physics tutor. A student rated 5 out of 10 in expertise has provided textbook content and a learning goal.
+
+Your task:
+1. Extract only the information from the content that is directly relevant to the goal.
+2. Explain it clearly and simply, suitable for a mid-level A Level student (Level 5).
+3. Wrap the explanation in plain, minimal HTML — only using basic tags like <p>, <ul>, <li>, <strong>, and <em>. 
+4. Do not include titles, subtitles, styles, or any extra layout — just clean, inline HTML that could be inserted into a webpage.
 {ex_output}
 """
 
@@ -95,38 +41,29 @@ Instructions:
 2. If it is a short-answer question:
    - Evaluate the accuracy, clarity, and completeness of the student's answer.
    - Assign a score out of 5 based on the quality and accuracy of the response.
-   - Provide a brief explanation justifying the score.
+   - Provide a brief explanation justifying the score. Be specific about what was accurate, what was missing, or what needed improvement.
 
 3. If it is a multiple-choice question (MCQ):
    - Indicate whether the student’s selected answer is correct.
    - Provide the correct answer (if the student is wrong).
    - Explain why the correct answer is right and why the others are not.
-4. Give the output in a HTML format.
+4. Only give the explanation in a HTML format as like the given examples. 
+5. Do not use unnecessary tags.
 
 Be clear, fair, and concise in your evaluation.
 
-Example input: 
+Example input 1: 
 
 "Question": "Which unit is equivalent to the coulomb? A ampere per second B joule per volt C watt per ampere D watt per volt ",
-"Students' answer": "B"
+"Students' answer": "A"
 
 Example output: 
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Response</title>
-</head>
-<body>
-  <p><strong>is_correct:</strong> true</p>
-  <p><strong>question_type:</strong> Short-answer</p>
-  <p><strong>score_out_of_5:</strong> 5</p>
-  <p><strong>explanation:</strong></p>
-  <ul>
-    <li><strong>part_i:</strong> The student correctly defined a gravitational line of force as indicating the direction a mass would move. This is accurate and clear for 1 mark.</li>
-    <li><strong>part_ii:</strong> The explanation is accurate and well reasoned. The student correctly mentions that the lines are parallel and evenly spaced near the Earth's surface, indicating a uniform field and thus a constant acceleration. The answer is complete and clearly explained for full marks.</li>
-  </ul>
-</body>
-</html>
+{
+  "is_correct": true,
+  "question_type": "Short-answer",
+  "score": 0,
+  "explanation": "<body> <p><strong>explanation:</strong></p> <ul> <li><strong>part_i:</strong> The student correctly defined a gravitational line of force as indicating the direction a mass would move. This is accurate and clear for 1 mark.</li> <li><strong>part_ii:</strong> The explanation is accurate and well reasoned. The student correctly mentions that the lines are parallel and evenly spaced near the Earth's surface, indicating a uniform field and thus a constant acceleration. The answer is complete and clearly explained for full marks.</li> </ul> </body>"
+}
 
 Example input 2:
 {
@@ -137,27 +74,20 @@ Example input 2:
 }
 
 Example Output 2:
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Response</title>
-</head>
-<body>
-  <p><strong>is_correct:</strong> true</p>
-  <p><strong>question_type:</strong> Short-answer</p>
-  <p><strong>score_out_of_5:</strong> 5</p>
-  <p><strong>explanation:</strong></p>
-  <ul>
-    <li><strong>part_i:</strong> The student correctly used the formula for gravitational field strength 
-      <span>&#8203;<em>g</em> = <em>GM</em> / <em>R</em><sup>2</sup></span> and substituted the values accurately to find 
-      <span><em>g</em> = 1.62 N kg<sup>−1</sup></span>. This is clear and accurate for full marks.
-    </li>
-    <li><strong>part_ii:</strong> The student correctly applied the formula for orbital period using 
-      <span><em>T</em><sup>2</sup> = 4&pi;<sup>2</sup><em>x</em><sup>3</sup> / <em>GM</em></span> and substituted the values correctly to find 
-      <span><em>T</em> = 8400 s</span>. The calculation is accurate and complete, showing a clear understanding of the necessary steps.
-    </li>
-  </ul>
-</body>
-</html>
+{
+  "is_correct": true,
+  "score": 5,
+  "explanation": "<ul> <li><strong>part_i:</strong> The student correctly used the formula for gravitational field strength <span>&#8203;<em>g</em> = <em>GM</em> / <em>R</em><sup>2</sup></span> and substituted the values accurately to find  <span><em>g</em> = 1.62 N kg<sup>−1</sup></span>. This is clear and accurate for full marks. </li> <li><strong>part_ii:</strong> The student correctly applied the formula for orbital period using <span><em>T</em><sup>2</sup> = 4&pi;<sup>2</sup><em>x</em><sup>3</sup> / <em>GM</em></span> and substituted the values correctly to find <span><em>T</em> = 8400 s</span>. The calculation is accurate and complete, showing a clear understanding of the necessary steps.</li> </ul> </body>"
+}
 
+Example Input:
+{
+    "Question": "A byte (b) comprises 8 bits. How many bits are there in 1 terabyte (1Tb)? A 1 × 109 B 8 × 109 C 1 × 1012 D 8 × 1012 "    
+    "Students' Answer": "A "
+}
+Example Output:
+{  
+"is_correct": false,
+"question_type": "Multiple-choice",  
+"explanation": "<p>The student's answer is incorrect.</p> <p>The correct answer is <strong>D 8 × 10<sup>12</sup></strong>.</p> <p>Explanation:</p> <ul> <li>1 terabyte (1 Tb) is equal to 10<sup>12</sup> bytes.</li> <li>Since 1 byte comprises 8 bits, 1 terabyte is equal to 8 × 10<sup>12</sup> bits.</li> <li>Option A, 1 × 10<sup>9</sup>, is incorrect as it represents a much smaller quantity.</li> </ul>"}
 """

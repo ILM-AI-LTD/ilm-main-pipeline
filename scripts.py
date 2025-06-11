@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def generate_script(topic, script, level):
+def generate_script(script, level, goals):
     """
     Generates a teacher-style script for students given a topic and prompt.
     """
@@ -19,7 +19,7 @@ def generate_script(topic, script, level):
             },
             {
                 "role": "user",
-                "content": f"Describe about \"{topic}\" with the help of following context: \n {script}. \nThe level of the student is {level}"
+                "content": f"Describe about \"{goals}\" with the help of following context: \n {script}. \nThe level of the student is {level}"
             }
         ],
         temperature= 0.1    
