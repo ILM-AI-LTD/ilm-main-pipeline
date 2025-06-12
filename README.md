@@ -17,3 +17,19 @@
   "student_answer": "D"
 }
 ```
+
+### POST http://127.0.0.1:5000//ilm-chatbot
+
+**Example I/O:**
+```json
+{
+  "question": "Does a higher specific heat capacity mean it heats up faster or slower?",
+  "content": "......",
+  "sub_topic": "Specific Heat Capacity"
+}
+```
+```json
+{
+    "answer": "<p>.....</p>"
+}
+```
