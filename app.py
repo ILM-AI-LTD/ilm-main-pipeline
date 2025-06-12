@@ -1,4 +1,4 @@
-from scripts import generate_evaluation, generate_script
+from scripts import generate_evaluation, generate_script, generate_chat
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
@@ -42,6 +42,20 @@ def evaluation_endpoint():
         return jsonify({"error": "Failed to parse evaluation response from model"})
     
     # return jsonify({"evaluation": evaluation})
+
+@app.route('/ilm-chatbot', methods=['POST'])
+def chatbox():
+    data = request.json
+    question = data.get('question')
+    content = data.get('content')
+    sub_topic = data.get('sub_topic')
+
+    if not question:
+        return jsonify({"error": "Missing question"}), 400
+
+    answer = generate_chat(content, sub_topic, question)
+    # print("Answer: \n", answer)
+    return jsonify({"answer": answer})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
