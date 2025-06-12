@@ -1,9 +1,9 @@
 from scripts import generate_evaluation, generate_script
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='view')
 CORS(app, origins="*")
 
 @app.route('/generate-script', methods=['POST'])
@@ -32,6 +32,10 @@ def evaluation_endpoint():
     evaluation = generate_evaluation(question, student_ans)
     evaluation = evaluation.replace('\n', '')
     return jsonify({"evaluation": evaluation})
+
+@app.route('/')
+def index():
+    return render_template('interface.html')
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

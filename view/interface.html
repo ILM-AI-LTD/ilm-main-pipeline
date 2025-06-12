@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A-Level Physics Learning API Interface</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1e3a8a;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: #1e40af;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border-left: 5px solid #1e40af;
+        }
+        
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #1e40af;
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        button {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        button:hover {
+            background: #1e3a8a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            color: #1e40af;
+            font-weight: 600;
+        }
+        
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            background: white;
+            border: 1px solid #ddd;
+            display: none;
+        }
+        
+        .result.success {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+        
+        .result.error {
+            border-color: #dc3545;
+            background: #fff8f8;
+        }
+        
+        .result h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .generated-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .evaluation-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .api-endpoint {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin-bottom: 15px;
+            border-left: 4px solid #1e40af;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1e40af;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ILM AI Intelligent Script maker and evaluator</h1>
+        
+        <!-- Script Generation Section -->
+        <div class="section">
+            <h2> Generate Educational Script</h2>
+            <div class="api-endpoint">POST /generate-script</div>
+            
+            <form id="scriptForm">
+                <div class="form-group">
+                    <label for="topic">Physics Topic:</label>
+                    <input type="text" id="topic" name="topic" placeholder="e.g., Newton's Laws of Motion" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="context">Context/Additional Information:</label>
+                    <textarea id="context" name="context" placeholder="Provide additional context, specific areas to focus on, or learning objectives..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="level">Student Level:</label>
+                    <select id="level" name="level" required>
+                        <option value="7">Beginner</option>
+                    </select>
+                </div>
+                
+                <button type="submit" id="generateBtn">Generate Script</button>
+            </form>
+            
+            <div class="loading" id="scriptLoading">
+                <div class="spinner"></div>
+                <p>Generating educational script...</p>
+            </div>
+            
+            <div class="result" id="scriptResult">
+                <h3>Generated Educational Script</h3>
+                <div class="generated-content" id="scriptContent"></div>
+            </div>
+        </div>
+        
+        <!-- Answer Evaluation Section -->
+        <div class="section">
+            <h2>Evaluate Student Answer</h2>
+            <div class="api-endpoint">POST /evaluate-answer</div>
+            
+            <form id="evaluationForm">
+                <div class="form-group">
+                    <label for="question">Physics Question:</label>
+                    <textarea id="question" name="question" placeholder="Enter the physics question here..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentAnswer">Student's Answer:</label>
+                    <textarea id="studentAnswer" name="student_answer" placeholder="Enter the student's answer to be evaluated..." required></textarea>
+                </div>
+                
+                <button type="submit" id="evaluateBtn">Evaluate Answer</button>
+            </form>
+            
+            <div class="loading" id="evaluationLoading">
+                <div class="spinner"></div>
+                <p>Evaluating student answer...</p>
+            </div>
+            
+            <div class="result" id="evaluationResult">
+                <h3>Evaluation Results</h3>
+                <div class="evaluation-details" id="evaluationContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base URL for your Flask API (update this to match your server)
+        const API_BASE_URL = 'http://localhost:5000';
+        
+        // Script Generation Form Handler
+        document.getElementById('scriptForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = {
+                topic: formData.get('topic'),
+                context: formData.get('context'),
+                level: formData.get('level')
+            };
+            
+            const button = document.getElementById('generateBtn');
+            const loading = document.getElementById('scriptLoading');
+            const result = document.getElementById('scriptResult');
+            const content = document.getElementById('scriptContent');
+            
+            // Show loading state
+            button.disabled = true;
+            loading.style.display = 'block';
+            result.style.display = 'none';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/generate-script`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const responseData = await response.json();
+                
+                if (response.ok) {
+                    content.innerHTML = responseData.script || responseData.message || 'Script generated successfully';
+                    result.className = 'result success';
+                    result.style.display = 'block';
+                } else {
+                    content.innerHTML = `<p style="color: #dc3545;">Error: ${responseData.error || 'Failed to generate script'}</p>`;
+                    result.className = 'result error';
+                    result.style.display = 'block';
+                }
+            } catch (error) {
+                content.innerHTML = `<p style="color: #dc3545;">Network Error: ${error.message}</p>`;
+                result.className = 'result error';
+                result.style.display = 'block';
+            } finally {
+                button.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+        
+        // Answer Evaluation Form Handler
+        document.getElementById('evaluationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = {
+                question: formData.get('question'),
+                student_answer: formData.get('student_answer')
+            };
+            
+            const button = document.getElementById('evaluateBtn');
+            const loading = document.getElementById('evaluationLoading');
+            const result = document.getElementById('evaluationResult');
+            const content = document.getElementById('evaluationContent');
+            
+            // Show loading state
+            button.disabled = true;
+            loading.style.display = 'block';
+            result.style.display = 'none';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/evaluate-answer`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const responseData = await response.json();
+                
+                if (response.ok) {
+                    let evaluationHTML = '';
+                    if (typeof responseData.evaluation === 'string') {
+                        evaluationHTML = responseData.evaluation;
+                    } else {
+                        evaluationHTML = JSON.stringify(responseData, null, 2);
+                    }
+                    
+                    content.innerHTML = evaluationHTML;
+                    result.className = 'result success';
+                    result.style.display = 'block';
+                } else {
+                    content.innerHTML = `<p style="color: #dc3545;">Error: ${responseData.error || 'Failed to evaluate answer'}</p>`;
+                    result.className = 'result error';
+                    result.style.display = 'block';
+                }
+            } catch (error) {
+                content.innerHTML = `<p style="color: #dc3545;">Network Error: ${error.message}</p>`;
+                result.className = 'result error';
+                result.style.display = 'block';
+            } finally {
+                button.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
