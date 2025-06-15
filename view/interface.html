@@ -186,19 +186,19 @@
             
             <form id="scriptForm">
                 <div class="form-group">
-                    <label for="topic">Physics Topic:</label>
-                    <input type="text" id="topic" name="topic" placeholder="e.g., Newton's Laws of Motion" required>
+                    <label for="context">Context:</label>
+                    <textarea id="context" name="context" placeholder="Provide additional context, specific areas to focus on, or learning objectives..." required></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label for="context">Context/Additional Information:</label>
-                    <textarea id="context" name="context" placeholder="Provide additional context, specific areas to focus on, or learning objectives..."></textarea>
+                    <label for="goals">Goals:</label>
+                    <input type="text" id="goals" name="goals" placeholder="e.g., Introduce the key formulas for calculating energy in these stores" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="level">Student Level:</label>
                     <select id="level" name="level" required>
-                        <option value="7">Beginner</option>
+                        <option value="7" selected>Beginner Level (Level 7)</option>
                     </select>
                 </div>
                 
@@ -242,7 +242,12 @@
             
             <div class="result" id="evaluationResult">
                 <h3>Evaluation Results</h3>
-                <div class="evaluation-details" id="evaluationContent"></div>
+                <div><strong>Is the answer correct:</strong> <span id="isCorrect"></span></div>
+                <div><strong>Question type:</strong> <span id="questionType"></span></div>
+                <div>
+                    <strong>Explanation:</strong>
+                    <div class="evaluation-details" id="explanationContent"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -257,8 +262,8 @@
             
             const formData = new FormData(this);
             const data = {
-                topic: formData.get('topic'),
                 context: formData.get('context'),
+                goals: formData.get('goals'),
                 level: formData.get('level')
             };
             
@@ -315,7 +320,9 @@
             const button = document.getElementById('evaluateBtn');
             const loading = document.getElementById('evaluationLoading');
             const result = document.getElementById('evaluationResult');
-            const content = document.getElementById('evaluationContent');
+            const isCorrect = document.getElementById('isCorrect');
+            const questionType = document.getElementById('questionType');
+            const explanationContent = document.getElementById('explanationContent');
             
             // Show loading state
             button.disabled = true;
@@ -334,23 +341,22 @@
                 const responseData = await response.json();
                 
                 if (response.ok) {
-                    let evaluationHTML = '';
-                    if (typeof responseData.evaluation === 'string') {
-                        evaluationHTML = responseData.evaluation;
-                    } else {
-                        evaluationHTML = JSON.stringify(responseData, null, 2);
-                    }
-                    
-                    content.innerHTML = evaluationHTML;
+                    isCorrect.textContent = responseData.is_correct ? "Yes" : "No";
+                    questionType.textContent = responseData.question_type || "";
+                    explanationContent.innerHTML = responseData.explanation || "";
                     result.className = 'result success';
                     result.style.display = 'block';
                 } else {
-                    content.innerHTML = `<p style="color: #dc3545;">Error: ${responseData.error || 'Failed to evaluate answer'}</p>`;
+                    isCorrect.textContent = "";
+                    questionType.textContent = "";
+                    explanationContent.innerHTML = `<p style="color: #dc3545;">Error: ${responseData.error || 'Failed to evaluate answer'}</p>`;
                     result.className = 'result error';
                     result.style.display = 'block';
                 }
             } catch (error) {
-                content.innerHTML = `<p style="color: #dc3545;">Network Error: ${error.message}</p>`;
+                isCorrect.textContent = "";
+                questionType.textContent = "";
+                explanationContent.innerHTML = `<p style="color: #dc3545;">Network Error: ${error.message}</p>`;
                 result.className = 'result error';
                 result.style.display = 'block';
             } finally {

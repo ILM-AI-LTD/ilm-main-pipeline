@@ -6,6 +6,10 @@ import os
 app = Flask(__name__, template_folder='view')
 CORS(app, origins="*")
 
+@app.route('/')
+def index():
+    return render_template('interface.html')
+
 @app.route('/generate-script', methods=['POST'])
 def script_endpoint():
     data = request.json
