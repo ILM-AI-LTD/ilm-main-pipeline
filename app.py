@@ -1,7 +1,10 @@
-from scripts import generate_evaluation, generate_script
+
+from scripts import generate_evaluation, generate_script, generate_chat
 from flask import Flask, request, jsonify, render_template
+
 from flask_cors import CORS
 import os
+import json
 
 app = Flask(__name__, template_folder='view')
 CORS(app, origins="*")
@@ -13,14 +16,15 @@ def index():
 @app.route('/generate-script', methods=['POST'])
 def script_endpoint():
     data = request.json
-    topic = data.get('topic')
+    # topic = data.get('topic')
     context = data.get('context')
     level = data.get('level')
+    goals = data.get('goals')
 
-    if not topic or not context:
+    if not goals or not context:
         return jsonify({"error": "Missing topic or context"}), 400
 
-    script = generate_script(topic, context, level)
+    script = generate_script(context, level, goals)
     script = script.replace('\n', '')
     return jsonify({"script": script})
 
@@ -34,8 +38,30 @@ def evaluation_endpoint():
         return jsonify({"error": "Missing question or student answer"}), 400
 
     evaluation = generate_evaluation(question, student_ans)
-    evaluation = evaluation.replace('\n', '')
-    return jsonify({"evaluation": evaluation})
+    evaluation = evaluation.replace('json\n','').replace('\n', '').replace('\\','').replace('html','').replace("```","")
+    print(evaluation)
+    try:
+        # Parse the JSON string into a Python dictionary
+        parsed_evaluation = json.loads(evaluation)
+        return jsonify(parsed_evaluation)
+    except: 
+        return jsonify({"error": "Failed to parse evaluation response from model"})
+    
+    # return jsonify({"evaluation": evaluation})
+
+@app.route('/ilm-chatbot', methods=['POST'])
+def chatbox():
+    data = request.json
+    question = data.get('question')
+    content = data.get('content')
+    sub_topic = data.get('sub_topic')
+
+    if not question:
+        return jsonify({"error": "Missing question"}), 400
+
+    answer = generate_chat(content, sub_topic, question)
+    # print("Answer: \n", answer)
+    return jsonify({"answer": answer})
 
 @app.route('/')
 def index():
