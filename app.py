@@ -1,4 +1,3 @@
-
 from scripts import generate_evaluation, generate_script, generate_chat
 from flask import Flask, request, jsonify, render_template
 
@@ -63,9 +62,11 @@ def chatbox():
     # print("Answer: \n", answer)
     return jsonify({"answer": answer})
 
-@app.route('/')
-def index():
-    return render_template('interface.html')
+@app.route('/chatbot-interface')
+def chatbot_interface():
+    return render_template('interface_chatbot.html')
+
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
